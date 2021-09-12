@@ -1,14 +1,14 @@
 #!/bin/bash
 
-xhost +local:root
-IMG=wilselby/car_demo:latest
-#IMG=wilselby/ros_melodic:city_sim
+#xhost +local:root
+#IMG=wilselby/car_demo:latest
+IMG=wilselby/ros_melodic:city_sim
 
 # If NVIDIA is present, use Nvidia-docker
 if test -c /dev/nvidia0
 then
-    docker run --rm -it \
-      --runtime=nvidia \
+    sudo docker run --rm -it \
+      --gpus all \
       --privileged \
       --device /dev/dri:/dev/dri \
       --env="DISPLAY" \
@@ -18,8 +18,9 @@ then
       $IMG \
       bash
 else
-    docker run --rm -it \
+    sudo docker run --rm -it \
       -e DISPLAY \
+      --gpus all \
       --device=/dev/dri:/dev/dri \
       -v "/tmp/.X11-unix:/tmp/.X11-unix" \
       -v "/dev/input:/dev/input" \
